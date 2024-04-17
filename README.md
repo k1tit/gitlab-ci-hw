@@ -31,11 +31,38 @@
    
  * файл gitlab-ci.yml для своего проекта или вставьте код в соответствующее поле в шаблоне; 
  * скриншоты с успешно собранными сборками.
- 
- 
----
-## Дополнительные задания* (со звёздочкой)
 
-Их выполнение необязательное и не влияет на получение зачёта по домашнему заданию. Можете их решить, если хотите лучше разобраться в материале.
+ ### Решение 2
 
----
+ gitlab-ci.yml
+ 
+```
+stages:
+  - test
+  - static-analysis
+  - build
+
+test:
+  stage: test
+  image: golang:1.16
+  script: 
+   - go test .
+
+static-analysis:
+ stage: test
+ image:
+  name: sonarsource/sonar-scanner-cli
+  entrypoint: [""]
+ variables:
+ script:
+  - sonar-scanner -Dsonar.projectKey=checkeray -Dsonar.sources=. -Dsonar.host.url=http://192.200.0.104:9000 -Dsonar.login=sqp_d7488143f45cd61c4d8de98b972ddf49ab52f910
+
+build:
+  stage: build
+  image: docker:latest
+  script:
+   - docker build . --tag gitlab-ci:latest
+```
+![image](https://github.com/k1tit/gitlab-ci-hw/assets/165839233/e978b29f-d79e-44f3-8c50-6901901820ab)
+![image](https://github.com/k1tit/gitlab-ci-hw/assets/165839233/36d33661-29b7-4434-bf66-d2f367808b3b)
+
